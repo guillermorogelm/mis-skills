@@ -1,0 +1,11 @@
+{
+  "name": "mis-skills",
+  "owner": { "name": "Guillermo" },
+  "plugins": [
+    {
+      "name": "mis-skills",
+      "source": "./plugins/mis-skills",
+      "description": "Mi colección personal de skills para Claude Code"
+    }
+  ]
+}
