@@ -28,6 +28,7 @@ Agrega esto a `.claude/settings.json` del proyecto (cambia USUARIO):
 | `product-manager` | Entrevista, PRD y control de alcance |
 | `claude-animation` | Caricaturas pintadas a mano con Clawd (p5.brush). Envuelve el kit de ClaudeAnimationBase |
 | `design-inspiration` | Elige referencias reales de las galerías de mkdir.directory antes de diseñar |
+| `tactile-toy-prompt` | Convierte una idea de una línea en un prompt para un juguete 3D blando en un solo HTML con three.js (estilo "Squishy Toast" / "Gummy Bears") |
 
 ### Descubrir más skills
 | Skill | Fuente |
