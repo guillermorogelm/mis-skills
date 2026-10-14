@@ -1,0 +1,6 @@
+{
+  "extraKnownMarketplaces": {
+    "mis-skills": { "source": { "source": "github", "repo": "guillermorogelm/mis-skills" } }
+  },
+  "enabledPlugins": { "mis-skills@mis-skills": true }
+}
