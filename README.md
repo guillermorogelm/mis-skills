@@ -29,6 +29,7 @@ Agrega esto a `.claude/settings.json` del proyecto (cambia USUARIO):
 | `claude-animation` | Caricaturas pintadas a mano con Clawd (p5.brush). Envuelve el kit de ClaudeAnimationBase |
 | `design-inspiration` | Elige referencias reales de las galerías de mkdir.directory antes de diseñar |
 | `tactile-toy-prompt` | Convierte una idea de una línea en un prompt para un juguete 3D blando en un solo HTML con three.js (estilo "Squishy Toast" / "Gummy Bears") |
+| `cinematic-site-prompt` | Prompt largo y detallado (2.000–3.500 palabras) para un sitio web cinematográfico guiado por scroll: escenas, motion, rendimiento, accesibilidad, SEO y checklist. Usa solo contenido real del sitio actual |
 
 ### Descubrir más skills
 | Skill | Fuente |
