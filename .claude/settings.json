@@ -9,6 +9,7 @@
   },
   "enabledPlugins": {
     "mis-skills@mis-skills": true,
-    "linkedin-skills@mis-skills": true
+    "linkedin-skills@mis-skills": true,
+    "founder@mis-skills": true
   }
 }

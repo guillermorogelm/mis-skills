@@ -15,7 +15,8 @@ Agrega esto a `.claude/settings.json` del proyecto (cambia USUARIO):
   },
   "enabledPlugins": {
     "mis-skills@mis-skills": true,
-    "linkedin-skills@mis-skills": true
+    "linkedin-skills@mis-skills": true,
+    "founder@mis-skills": true
   }
 }
 ```
@@ -73,6 +74,7 @@ De [@alexyc9381](https://github.com/alexyc9381). Varias usan scripts de Python i
 | `shark` | Presenta tu idea a 5 inversores estilo Shark Tank que la interrogan y deciden IN u OUT | [shark-skill](https://github.com/alexyc9381/shark-skill) |
 | `court` | Juicio a una idea: fiscal, defensa, 12 jurados y un juez que lee el veredicto | [court-skill](https://github.com/alexyc9381/court-skill) |
 | `launch` | Revisión pre-lanzamiento estilo NASA: 8 controladores dan GO o NO-GO a tu app | [launch-skill](https://github.com/alexyc9381/launch-skill) |
+| `night-crew` | Tres rutinas nocturnas en la nube sobre tu repo de GitHub: un builder que hace la siguiente feature, un scout que busca clientes y redacta posts, y un tracker que revisa qué funciona. Solo abren pull requests; `/night-crew morning` da el resumen | [night-crew-skill](https://github.com/alexyc9381/night-crew-skill) |
 | `linkedin-roast` | Cinco perfiles critican tu LinkedIn y luego lo reescriben (titular, Acerca de, experiencia) | [linkedin-roast-skill](https://github.com/alexyc9381/linkedin-roast-skill) |
 
 ### Fundadores (Jake Schincariol)
@@ -91,6 +93,25 @@ De [Jakeschincariol/founder-skill](https://github.com/Jakeschincariol/founder-sk
 | `founder-ops` | Proveedores, turnos, rutinas, herramientas y permisos |
 | `founder-launch` | Plan de lanzamiento con prueba real primero y cuenta regresiva |
 | `founder-plan` | Compila todo en un plan de negocio con veredicto |
+
+### Fundador (Emotix) - plugin aparte
+De [emotixco/claude-skills-founder](https://github.com/emotixco/claude-skills-founder). Va como su propio plugin, `founder@mis-skills` en `plugins/founder/`, porque todas sus skills leen `shared/conventions.md` en la raíz. Se llaman como `/founder:<skill>`. Guardan su salida en `founder/` del proyecto, igual que las `founder-*` de Jake, pero con nombres de archivo distintos, así que conviven y se pueden leer entre sí.
+
+| Skill | Para qué |
+|---|---|
+| `validate-idea` | Valida una idea antes de construir |
+| `competitor-matrix` | Matriz de competidores con precios y fuentes |
+| `pricing-strategy` | Estrategia de precios y niveles |
+| `persona-gen` | Perfiles de cliente |
+| `product-brief` | Brief de producto |
+| `mvp-scope` | Alcance del MVP |
+| `user-interviews` | Guion y síntesis de entrevistas |
+| `go-to-market` | Plan de lanzamiento al mercado |
+| `landing-page` | Texto de la landing page |
+| `email-sequence` | Secuencia de correos |
+| `metrics-dashboard` | Métricas a seguir |
+| `pitch-deck` | Pitch deck |
+| `fundraise-prep` | Preparación de la ronda |
 
 ### LinkedIn (Serge Bulaev) - plugin aparte
 De [sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills). Va como su propio plugin, `linkedin-skills@mis-skills` en `plugins/linkedin-skills/`, porque sus skills comparten `references/`, `lib/` y `scripts/` en la raíz. Se llaman como `/linkedin-skills:<skill>`. Publicar o leer LinkedIn necesita una clave de [Publora](https://publora.com) o su conector; el análisis de interacciones, una de [Apify](https://apify.com) (ver `plugins/linkedin-skills/.env.example`).
@@ -113,8 +134,8 @@ De [sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)
 ## Licencias de terceros
 Cada skill importada conserva su `LICENSE` original en su carpeta.
 
-- MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar, las skills de Alex Chen (`agency`, `shark`, `court`, `launch`, `linkedin-roast`), las `founder-*` y `linkedin-skills`
+- MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar, las skills de Alex Chen (`agency`, `shark`, `court`, `launch`, `linkedin-roast`, `night-crew`), las `founder-*`, `linkedin-skills` y el plugin `founder` de Emotix
 - Apache 2.0: HyperFrames y `media-use`
 - **PolyForm Noncommercial 1.0.0: `onetake`. Solo uso no comercial.**
 
-Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí). Lo mismo con la imagen principal del README de `linkedin-skills`; de ese repo tampoco se copiaron la copia para Codex, sus tests, sus evals ni sus archivos de desarrollo (`CLAUDE.md`, `AGENTS.md`, `.github/`).
+Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí). Lo mismo con la imagen principal del README de `linkedin-skills`; de ese repo tampoco se copiaron la copia para Codex, sus tests, sus evals ni sus archivos de desarrollo (`CLAUDE.md`, `AGENTS.md`, `.github/`). Del plugin `founder` de Emotix no se copiaron `commands/` (avisos de la v1 obsoleta), `evals/`, `examples/` ni `.github/`; su README todavía enlaza a esas carpetas.
