@@ -75,7 +75,13 @@ De [@alexyc9381](https://github.com/alexyc9381). Varias usan scripts de Python i
 | `court` | Juicio a una idea: fiscal, defensa, 12 jurados y un juez que lee el veredicto | [court-skill](https://github.com/alexyc9381/court-skill) |
 | `launch` | Revisión pre-lanzamiento estilo NASA: 8 controladores dan GO o NO-GO a tu app | [launch-skill](https://github.com/alexyc9381/launch-skill) |
 | `night-crew` | Tres rutinas nocturnas en la nube sobre tu repo de GitHub: un builder que hace la siguiente feature, un scout que busca clientes y redacta posts, y un tracker que revisa qué funciona. Solo abren pull requests; `/night-crew morning` da el resumen | [night-crew-skill](https://github.com/alexyc9381/night-crew-skill) |
+| `harvey` | Instala y maneja [Harvey](https://github.com/ethanplusai/harvey) (de Ethan Rogers, MIT), un agente de ventas autónomo que busca negocios, escribe correos en frío y los envía solo con tu aprobación, usando tu plan de Claude. La skill es un lanzador propio; la app se clona en `~/harvey` | propia |
 | `linkedin-roast` | Cinco perfiles critican tu LinkedIn y luego lo reescriben (titular, Acerca de, experiencia) | [linkedin-roast-skill](https://github.com/alexyc9381/linkedin-roast-skill) |
+
+### Contenido
+| Skill | Para qué | Fuente |
+|---|---|---|
+| `content-principles` | La psicología del contenido corto (reels, TikTok, Shorts, ganchos): cómo piensa quien mira, sin plantillas | [aiwithremy/content-principles](https://github.com/aiwithremy/content-principles), de Remy Gaskell. **Sin licencia** (ver abajo) |
 
 ### Fundadores (Jake Schincariol)
 De [Jakeschincariol/founder-skill](https://github.com/Jakeschincariol/founder-skill). Se usan juntas: cada una lee lo que escribieron las anteriores y `founder-plan` lo compila en un plan de negocio.
@@ -137,5 +143,6 @@ Cada skill importada conserva su `LICENSE` original en su carpeta.
 - MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar, las skills de Alex Chen (`agency`, `shark`, `court`, `launch`, `linkedin-roast`, `night-crew`), las `founder-*`, `linkedin-skills` y el plugin `founder` de Emotix
 - Apache 2.0: HyperFrames y `media-use`
 - **PolyForm Noncommercial 1.0.0: `onetake`. Solo uso no comercial.**
+- **Sin licencia: `content-principles`.** El repo original no tiene archivo de licencia, así que los derechos son del autor. Se incluye sin cambios para uso personal, como sugiere su README; ver `SOURCE.md` en su carpeta. Si el autor lo pide, hay que quitarla.
 
 Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí). Lo mismo con la imagen principal del README de `linkedin-skills`; de ese repo tampoco se copiaron la copia para Codex, sus tests, sus evals ni sus archivos de desarrollo (`CLAUDE.md`, `AGENTS.md`, `.github/`). Del plugin `founder` de Emotix no se copiaron `commands/` (avisos de la v1 obsoleta), `evals/`, `examples/` ni `.github/`; su README todavía enlaza a esas carpetas.
