@@ -1,11 +1,18 @@
 {
   "name": "mis-skills",
-  "owner": { "name": "Guillermo" },
+  "owner": {
+    "name": "Guillermo"
+  },
   "plugins": [
     {
       "name": "mis-skills",
       "source": "./plugins/mis-skills",
       "description": "Mi colección personal de skills para Claude Code"
+    },
+    {
+      "name": "linkedin-skills",
+      "source": "./plugins/linkedin-skills",
+      "description": "12 skills de LinkedIn de Serge Bulaev (sergebulaev/linkedin-skills): posts, comentarios, respuestas, humanizer, perfil, plan de contenido y más. Publicar requiere una clave de Publora; el análisis, de Apify."
     }
   ]
 }
