@@ -6,7 +6,10 @@ description: Validate, install, list and run the skills in this mis-skills marke
 # Run mis-skills
 
 This repo is a Claude Code plugin marketplace (`.claude-plugin/marketplace.json`)
-with one plugin, `plugins/mis-skills`, holding a folder per skill. "Running" it
+with two plugins: `plugins/mis-skills` (a folder per skill) and
+`plugins/linkedin-skills` (vendored as a whole plugin, because its skills share
+`references/`, `lib/` and `scripts/` at its root). The driver reads the plugin
+list from `marketplace.json`, so a new plugin is picked up automatically. "Running" it
 means three things: the manifests and every `SKILL.md` validate, a real Claude
 Code install loads all skills, and a skill produces output when invoked. The
 driver does all three without touching your real `~/.claude`.
@@ -26,7 +29,7 @@ node .claude/skills/run-mis-skills/driver.mjs check
 ```
 
 Offline, no model calls. Runs `claude plugin validate` on the marketplace,
-the plugin and (with `--strict`) the skills folder; checks every
+each plugin and (with `--strict`) each skills folder; checks every
 `SKILL.md` has frontmatter whose `name` equals its folder and a non-empty
 description; warns on descriptions over 1024 characters and skills missing
 from `README.md`; runs every bundled `*.test.mjs` and fails only on test
@@ -39,16 +42,17 @@ node .claude/skills/run-mis-skills/driver.mjs list
 
 `install` adds this checkout as a local marketplace in a sandbox config
 (`CLAUDE_CONFIG_DIR=/tmp/mis-skills-sandbox/config`, override with
-`MIS_SKILLS_SANDBOX`) and installs `mis-skills@mis-skills`; it prints the
-skill count and always-on token cost. `list` starts a headless session and
-fails if any skill folder is not visible as `mis-skills:<name>`. One short
+`MIS_SKILLS_SANDBOX`) and installs every plugin as `<plugin>@mis-skills`; it prints each
+plugin's skill count and always-on token cost. `list` starts a headless
+session and fails if any skill folder is not visible as `<plugin>:<name>`. One short
 model call.
 
 ```bash
 node .claude/skills/run-mis-skills/driver.mjs invoke product-manager "a habit tracker app for one person"
+node .claude/skills/run-mis-skills/driver.mjs invoke linkedin-skills:linkedin-humanizer "--mode audit for this draft (do not publish anything): <text>"
 ```
 
-Runs `/mis-skills:<skill> <args>` in a headless session (read-only tools:
+Runs `/<plugin>:<skill> <args>` (a bare skill name is looked up in every plugin) in a headless session (read-only tools:
 Read, Glob, Grep; max 8 turns), prints each tool call, any tool errors and
 the final answer, and saves the answer to
 `/tmp/mis-skills-sandbox/invoke-<skill>.md`. Run `install` first.
@@ -100,6 +104,11 @@ driver for those.
   with `UPDATE_KNOWN=1 node .claude/skills/run-mis-skills/driver.mjs check`.
 - **`node --test <dir>/` does not recurse here** (it reported one failing
   "test" for the directory). The driver passes the file list explicitly.
+- **Several imported skills run Python from their own folder** via
+  `${CLAUDE_SKILL_DIR}` (`shark.py`, `court.py`, `launch.py`, the
+  `founder-*` scripts). `invoke` only allows Read/Glob/Grep, so those skills
+  stop where they would run the script; smoke the scripts directly, e.g.
+  `python3 -I plugins/mis-skills/skills/founder-cfo/unit_economics.py plugins/mis-skills/skills/founder-cfo/example.json --out /tmp/cfo.md`.
 - **The media-use tests spawn Python** and leave `__pycache__/` in
   `media-use/audio/scripts/lib/`. The driver sets `PYTHONDONTWRITEBYTECODE=1`.
 

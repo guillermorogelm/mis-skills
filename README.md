@@ -13,7 +13,10 @@ Agrega esto a `.claude/settings.json` del proyecto (cambia USUARIO):
   "extraKnownMarketplaces": {
     "mis-skills": { "source": { "source": "github", "repo": "USUARIO/mis-skills" } }
   },
-  "enabledPlugins": { "mis-skills@mis-skills": true }
+  "enabledPlugins": {
+    "mis-skills@mis-skills": true,
+    "linkedin-skills@mis-skills": true
+  }
 }
 ```
 
@@ -61,11 +64,57 @@ Seleccionadas de [awesome-claude-video-skills](https://github.com/zhuyansen/awes
 | `claude-animation` | Clawd en animación pintada a mano | [JohnHeibel/ClaudeAnimationBase](https://github.com/JohnHeibel/ClaudeAnimationBase) |
 | `lemo-opuscar` | Cortos en 43 estilos de cine; descarga la librería a `~/lemo-opuscar` en el primer uso | [lemomo-ai/lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar) |
 
+### Negocio y lanzamiento (Alex Chen)
+De [@alexyc9381](https://github.com/alexyc9381). Varias usan scripts de Python incluidos en la carpeta de la skill.
+
+| Skill | Para qué | Fuente |
+|---|---|---|
+| `agency` | Agencia de automatización con IA: correos en frío, preparación de llamadas, propuestas y flujos | [agency-skill](https://github.com/alexyc9381/agency-skill) |
+| `shark` | Presenta tu idea a 5 inversores estilo Shark Tank que la interrogan y deciden IN u OUT | [shark-skill](https://github.com/alexyc9381/shark-skill) |
+| `court` | Juicio a una idea: fiscal, defensa, 12 jurados y un juez que lee el veredicto | [court-skill](https://github.com/alexyc9381/court-skill) |
+| `launch` | Revisión pre-lanzamiento estilo NASA: 8 controladores dan GO o NO-GO a tu app | [launch-skill](https://github.com/alexyc9381/launch-skill) |
+| `linkedin-roast` | Cinco perfiles critican tu LinkedIn y luego lo reescriben (titular, Acerca de, experiencia) | [linkedin-roast-skill](https://github.com/alexyc9381/linkedin-roast-skill) |
+
+### Fundadores (Jake Schincariol)
+De [Jakeschincariol/founder-skill](https://github.com/Jakeschincariol/founder-skill). Se usan juntas: cada una lee lo que escribieron las anteriores y `founder-plan` lo compila en un plan de negocio.
+
+| Skill | Para qué |
+|---|---|
+| `founder-board` | Junta directiva de 3 que evalúa la idea con marcos publicados |
+| `founder-competitors` | Mapa de competidores y el hueco que dejan |
+| `founder-consumer` | Panel de compradores simulados (100 por defecto) que reaccionan al pitch |
+| `founder-pricing` | Precio que pagarían (Van Westendorp) frente a competidores y costos |
+| `founder-offer` | Oferta irresistible: problemas, soluciones, bonos y garantía |
+| `founder-cfo` | Unit economics, punto de equilibrio y caja del año 1 |
+| `founder-marketing` | Posicionamiento, canales y campaña de 30 días |
+| `founder-brand` | Nombre, voz, promesa y brief visual |
+| `founder-ops` | Proveedores, turnos, rutinas, herramientas y permisos |
+| `founder-launch` | Plan de lanzamiento con prueba real primero y cuenta regresiva |
+| `founder-plan` | Compila todo en un plan de negocio con veredicto |
+
+### LinkedIn (Serge Bulaev) - plugin aparte
+De [sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills). Va como su propio plugin, `linkedin-skills@mis-skills` en `plugins/linkedin-skills/`, porque sus skills comparten `references/`, `lib/` y `scripts/` en la raíz. Se llaman como `/linkedin-skills:<skill>`. Publicar o leer LinkedIn necesita una clave de [Publora](https://publora.com) o su conector; el análisis de interacciones, una de [Apify](https://apify.com) (ver `plugins/linkedin-skills/.env.example`).
+
+| Skill | Para qué |
+|---|---|
+| `linkedin-post-writer` | Escribe un post desde cero con una de 20 fórmulas de gancho |
+| `linkedin-comment-drafter` | Comenta o comparte un post a partir de su URL |
+| `linkedin-reply-handler` | Responde un comentario o barre un hilo completo |
+| `linkedin-humanizer` | Quita las marcas de texto de IA y audita antes de publicar |
+| `linkedin-hook-extractor` | Saca la fórmula de gancho de un post viral |
+| `linkedin-profile-optimizer` | Audita y reescribe un perfil completo |
+| `linkedin-content-planner` | Plan de contenido de 7 días |
+| `linkedin-repurposer` | Convierte un tweet, video o blog en post nativo |
+| `linkedin-interviewer` | Te entrevista y arma un banco de historias para tus posts |
+| `linkedin-employee-advocacy` | Programa de advocacy para un equipo |
+| `linkedin-thread-monitor` | Sigue qué comentarios tuyos recibieron respuesta del autor |
+| `linkedin-engager-analytics` | Segmenta a quienes dieron like o comentaron un post |
+
 ## Licencias de terceros
 Cada skill importada conserva su `LICENSE` original en su carpeta.
 
-- MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar
+- MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar, las skills de Alex Chen (`agency`, `shark`, `court`, `launch`, `linkedin-roast`), las `founder-*` y `linkedin-skills`
 - Apache 2.0: HyperFrames y `media-use`
 - **PolyForm Noncommercial 1.0.0: `onetake`. Solo uso no comercial.**
 
-Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí).
+Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí). Lo mismo con la imagen principal del README de `linkedin-skills`; de ese repo tampoco se copiaron la copia para Codex, sus tests, sus evals ni sus archivos de desarrollo (`CLAUDE.md`, `AGENTS.md`, `.github/`).

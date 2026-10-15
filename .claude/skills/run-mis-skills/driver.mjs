@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Driver for the mis-skills marketplace: validate it, install it into an
-// isolated Claude Code config, and run a skill headlessly.
+// Driver for the mis-skills marketplace: validate it, install every plugin it
+// lists into an isolated Claude Code config, and run a skill headlessly.
 //
 //   node .claude/skills/run-mis-skills/driver.mjs check
 //   node .claude/skills/run-mis-skills/driver.mjs install
 //   node .claude/skills/run-mis-skills/driver.mjs list
-//   node .claude/skills/run-mis-skills/driver.mjs invoke <skill> [args...]
+//   node .claude/skills/run-mis-skills/driver.mjs invoke [plugin:]<skill> [args...]
 //   node .claude/skills/run-mis-skills/driver.mjs all
 //
 // Run from the repo root. Nothing touches your real ~/.claude: install,
@@ -19,7 +19,12 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../../..');
-const SKILLS = join(ROOT, 'plugins/mis-skills/skills');
+// Every plugin in the marketplace, with its skills folder.
+const PLUGINS = JSON.parse(readFileSync(join(ROOT, '.claude-plugin/marketplace.json'), 'utf8')).plugins.map((p) => ({
+  name: p.name,
+  dir: p.source.replace(/^\.\//, ''),
+  skills: join(ROOT, p.source, 'skills'),
+}));
 const SANDBOX = process.env.MIS_SKILLS_SANDBOX || '/tmp/mis-skills-sandbox';
 const CFG = join(SANDBOX, 'config');
 const CWD = join(SANDBOX, 'cwd');
@@ -29,6 +34,10 @@ let failed = false;
 const ok = (m) => console.log(`  ok   ${m}`);
 const bad = (m) => { failed = true; console.log(`  FAIL ${m}`); };
 const warn = (m) => console.log(`  warn ${m}`);
+
+function skillDirs(plugin) {
+  return readdirSync(plugin.skills, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+}
 
 function run(cmd, args, opts = {}) {
   return spawnSync(cmd, args, { encoding: 'utf8', maxBuffer: 64 << 20, ...opts });
@@ -55,7 +64,8 @@ function frontmatter(text) {
 
 function checkManifests() {
   console.log('\n# claude plugin validate');
-  for (const [target, strict] of [['.', false], ['plugins/mis-skills', false], ['plugins/mis-skills/skills', true]]) {
+  const targets = [['.', false], ...PLUGINS.flatMap((p) => [[p.dir, false], [`${p.dir}/skills`, true]])];
+  for (const [target, strict] of targets) {
     const args = ['plugin', 'validate', ...(strict ? ['--strict'] : []), target];
     const r = run('claude', args, { cwd: ROOT });
     const label = `claude ${args.join(' ')}`;
@@ -67,9 +77,10 @@ function checkManifests() {
 function checkSkills() {
   console.log('\n# SKILL.md frontmatter and README');
   const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
-  const dirs = readdirSync(SKILLS, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-  for (const dir of dirs) {
-    const file = join(SKILLS, dir, 'SKILL.md');
+  let count = 0;
+  for (const plugin of PLUGINS) for (const dir of skillDirs(plugin)) {
+    count++;
+    const file = join(plugin.skills, dir, 'SKILL.md');
     if (!existsSync(file)) { bad(`${dir}: no SKILL.md`); continue; }
     const fm = frontmatter(readFileSync(file, 'utf8'));
     if (!fm) { bad(`${dir}: no frontmatter`); continue; }
@@ -78,7 +89,7 @@ function checkSkills() {
     else if (fm.description.length > 1024) warn(`${dir}: description is ${fm.description.length} chars (over 1024)`);
     if (!readme.includes(`\`${dir}\``)) warn(`${dir}: not mentioned in README.md`);
   }
-  ok(`${dirs.length} skill folders scanned`);
+  ok(`${count} skill folders scanned in ${PLUGINS.length} plugins`);
 }
 
 function checkTests() {
@@ -92,7 +103,7 @@ function checkTests() {
       else if (e.name.endsWith('.test.mjs')) files.push(p);
     }
   };
-  walk(SKILLS);
+  for (const plugin of PLUGINS) walk(plugin.skills);
   const r = run(process.execPath, ['--test', '--test-reporter=tap', ...files], {
     cwd: ROOT,
     env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' },
@@ -123,12 +134,15 @@ function install() {
     const r = run('claude', ['plugin', 'marketplace', 'add', ROOT], { env, cwd: CWD });
     if (r.status !== 0) return bad('marketplace add\n' + r.stdout + r.stderr);
   }
-  const r = run('claude', ['plugin', 'install', 'mis-skills@mis-skills'], { env, cwd: CWD });
-  if (r.status !== 0) return bad('plugin install\n' + r.stdout + r.stderr);
-  const d = run('claude', ['plugin', 'details', 'mis-skills@mis-skills'], { env, cwd: CWD });
-  const skills = d.stdout.match(/Skills \((\d+)\)/)?.[1];
-  const cost = d.stdout.match(/Always-on:\s+(\S+ tok)/)?.[1];
-  ok(`installed mis-skills@mis-skills from ${ROOT}: ${skills} skills, always-on ${cost}`);
+  for (const plugin of PLUGINS) {
+    const id = `${plugin.name}@mis-skills`;
+    const r = run('claude', ['plugin', 'install', id], { env, cwd: CWD });
+    if (r.status !== 0) { bad(`plugin install ${id}\n` + r.stdout + r.stderr); continue; }
+    const d = run('claude', ['plugin', 'details', id], { env, cwd: CWD });
+    const skills = d.stdout.match(/Skills \((\d+)\)/)?.[1];
+    const cost = d.stdout.match(/Always-on:\s+(\S+ tok)/)?.[1];
+    ok(`installed ${id} from ${plugin.dir}: ${skills} skills, always-on ${cost}`);
+  }
 }
 
 function headless(prompt, maxTurns) {
@@ -145,23 +159,27 @@ function headless(prompt, maxTurns) {
 
 function list() {
   console.log('\n# skills a headless session sees');
-  const { events } = headless("Reply with only a comma-separated list of the skill names you have available whose names start with 'mis-skills:'. Nothing else.", 1);
+  const prefixes = PLUGINS.map((p) => `'${p.name}:'`).join(' or ');
+  const { events } = headless(`Reply with only a comma-separated list of the skill names you have available whose names start with ${prefixes}. Nothing else.`, 1);
   const result = events.find((e) => e.type === 'result');
   if (!result || result.subtype !== 'success') return bad('headless session did not finish');
-  const seen = result.result.match(/mis-skills:[a-z0-9-]+/g) ?? [];
-  const onDisk = readdirSync(SKILLS, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-  const missing = onDisk.filter((s) => !seen.includes(`mis-skills:${s}`));
-  if (missing.length) bad(`not visible to the session: ${missing.join(', ')}`);
-  else ok(`all ${onDisk.length} skills visible as mis-skills:<name>`);
+  const seen = new Set(result.result.match(/[a-z0-9-]+:[a-z0-9-]+/g) ?? []);
+  for (const plugin of PLUGINS) {
+    const onDisk = skillDirs(plugin);
+    const missing = onDisk.filter((s) => !seen.has(`${plugin.name}:${s}`));
+    if (missing.length) bad(`${plugin.name}: not visible to the session: ${missing.join(', ')}`);
+    else ok(`all ${onDisk.length} skills visible as ${plugin.name}:<name>`);
+  }
 }
 
 function invoke(skill, args) {
-  if (!skill) { console.error('usage: driver.mjs invoke <skill> [args...]'); process.exit(2); }
-  const name = skill.replace(/^mis-skills:/, '');
-  console.log(`\n# /mis-skills:${name} ${args}`);
+  if (!skill) { console.error('usage: driver.mjs invoke [plugin:]<skill> [args...]'); process.exit(2); }
+  const [given, name] = skill.includes(':') ? skill.split(':') : [null, skill];
   // An unknown slash command still ends in a "success" result, so check the folder first.
-  if (!existsSync(join(SKILLS, name, 'SKILL.md'))) return bad(`no skill folder plugins/mis-skills/skills/${name}`);
-  const { events, stderr } = headless(`/mis-skills:${name} ${args}`.trim(), 8);
+  const plugin = PLUGINS.find((p) => (!given || p.name === given) && existsSync(join(p.skills, name, 'SKILL.md')));
+  if (!plugin) return bad(`no skill folder ${name} in ${given ?? PLUGINS.map((p) => p.name).join(', ')}`);
+  console.log(`\n# /${plugin.name}:${name} ${args}`);
+  const { events, stderr } = headless(`/${plugin.name}:${name} ${args}`.trim(), 8);
   for (const e of events) {
     if (e.type === 'assistant') {
       for (const c of e.message.content) {

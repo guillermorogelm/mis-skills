@@ -1,0 +1,95 @@
+[
+  {
+    "id": "tests",
+    "name": "TESTS",
+    "job": "runs your tests, your type check and your build, and reads what this launch changes to see whether anything actually tests it",
+    "checks": [
+      "Find how the project tests itself (package.json scripts, pytest, Makefile, the mission file) and run the test suite, the type check, the linter and the production build that exist. Quote the exact command and the failing lines.",
+      "List the parts this launch changes (the mission names them; otherwise the recent commits or the uncommitted diff) and say which of them no test touches.",
+      "Look for tests that are skipped, commented out, or assert nothing (expect(true)), and for snapshots updated without review."
+    ],
+    "nogo": "Any test, type check or production build fails, or the launch changes payments, sign-in or user data and nothing tests that part."
+  },
+  {
+    "id": "security",
+    "name": "SECURITY",
+    "job": "hunts for security holes: leaked keys and passwords, pages and API routes anyone can reach, and user input that reaches your database or shell",
+    "checks": [
+      "Secrets in the code or in tracked files: API keys, passwords, tokens, private keys, .env files committed, secrets in client-side code or in public env vars (NEXT_PUBLIC_, VITE_, EXPO_PUBLIC_) that should be server-only. Check git history briefly (git log -p -S on likely key prefixes) for keys that were removed but never rotated.",
+      "Every API route, server action and admin page: does it check who is signed in, and that they own what they touch?",
+      "User input reaching SQL, shell commands, file paths or HTML without escaping; wide-open CORS; passwords stored in plain text or with a fast hash (md5, sha1).",
+      "Dependencies with known critical vulnerabilities, if an audit command is available (npm audit, pip-audit)."
+    ],
+    "nogo": "A real secret is in the repo or in code that ships to the browser, a route that reads or changes other people's data has no sign-in check, or user input can reach SQL or a shell command."
+  },
+  {
+    "id": "database",
+    "name": "DATABASE",
+    "job": "checks your database: the migrations this launch runs, whether any of them destroys data, who can read which rows, and whether there is a backup",
+    "checks": [
+      "Every migration this launch would run: in order, and can it be undone? Flag DROP, TRUNCATE, column renames and type changes that lose data with no backfill or copy first.",
+      "Tables that hold users' data: can one user read or change another user's rows (row-level security on Supabase, owner checks in queries)?",
+      "Queries the main pages run: missing indexes on columns they filter or sort by, unbounded SELECT * on tables that grow.",
+      "Is there a backup (or point-in-time restore) for production, and do seed or reset scripts risk running against it?"
+    ],
+    "nogo": "A migration deletes or rewrites user data with no backup or copy step, one user can read or change another user's data, or a schema change has no migration at all."
+  },
+  {
+    "id": "speed",
+    "name": "SPEED",
+    "job": "checks your speed: how heavy the pages are, queries that run in loops, lists with no limit, and slow calls in the way of every request",
+    "checks": [
+      "If a production build exists or can be made, the largest JavaScript bundles and images shipped to the first page; heavy libraries imported on the client for small jobs.",
+      "Database queries or API calls inside loops on the request path (N+1), lists and feeds with no pagination or limit, and work done on every request that could be cached.",
+      "Slow external calls (AI, email, payments) made while the user waits, with no timeout."
+    ],
+    "nogo": "A main page or endpoint gets slower with every user or row because of a query in a loop or a list with no limit, or the first page ships more than about 2 MB of JavaScript and images."
+  },
+  {
+    "id": "cost",
+    "name": "COST",
+    "job": "checks the actual cost: every paid service the code calls, what it costs at 100 and 1,000 users, and whether a stranger could run up your bill",
+    "checks": [
+      "Every paid API and service the code calls (AI models, email, SMS, maps, storage, hosting functions, databases): where it is called and how often per user action.",
+      "Endpoints that trigger a paid call: do they require sign-in, and is there a rate limit or a spending cap? Could someone call it in a loop?",
+      "AI calls with no max tokens, an expensive model where a cheap one would do, or the same answer computed again and again with no cache.",
+      "A rough monthly cost at 100 and at 1,000 active users, with the assumptions written down, against the budget in the mission if there is one; free tiers the app would blow through."
+    ],
+    "nogo": "Anyone can trigger a paid call (no sign-in, no rate limit, no cap), or the cost at the expected number of users is over the budget in the mission."
+  },
+  {
+    "id": "users",
+    "name": "USERS",
+    "job": "walks the path your users take: sign up, sign in, the main thing the app does, paying, and what they see when something goes wrong",
+    "checks": [
+      "Trace the main journey through the code, page by page: sign up, verify, sign in, the core action, payment if there is one, sign out. Any step that is missing, unreachable or crashes on a normal input?",
+      "Empty states, loading states and error messages on the main pages: does a new user with no data see something useful? Do forms validate and say what is wrong?",
+      "Links and routes that point nowhere, buttons with no handler, and emails the app promises (verification, receipts) that are not actually sent."
+    ],
+    "nogo": "A step in the main journey (sign up, sign in, the core action or payment) is missing, unreachable or fails on normal input."
+  },
+  {
+    "id": "recovery",
+    "name": "RECOVERY",
+    "job": "checks you can recover if it goes wrong: settings the app needs, seeing errors in production, rolling back, and what happens when another service is down",
+    "checks": [
+      "Every environment variable the code reads: is it listed somewhere (.env.example, README, the host's settings) so production will have it? Name any that are read but documented nowhere.",
+      "Will you see errors in production (an error tracker, logs you can read, alerts)? Is there a health check?",
+      "Can this launch be rolled back: the previous deploy, migrations that can go down, feature flags?",
+      "Calls to other services: timeouts, retries and a sensible message when they fail."
+    ],
+    "nogo": "The app reads a setting that is documented nowhere, there is no way to see errors in production, or this launch cannot be undone (no previous deploy to return to, a migration with no way back)."
+  },
+  {
+    "id": "rules",
+    "name": "RULES",
+    "job": "checks the rules you have to follow: a privacy policy and terms when you collect personal data or payments, deleting a user's data, licences, and what your marketing promises",
+    "checks": [
+      "Does the app collect emails, names, payment details or other personal data? If so, is there a privacy policy and terms, linked where people sign up or pay?",
+      "Can a user delete their account and their data? Are marketing emails sent with an unsubscribe link? Cookie or analytics consent where the app's users would need it?",
+      "Dependency licences that conflict with how the app is shipped (for example GPL code in a closed-source product), and assets or data used without the right to.",
+      "Claims on the landing page or in the app that the code does not back up (\"end-to-end encrypted\", \"we never store your data\")."
+    ],
+    "nogo": "The app collects personal data or payments with no privacy policy, or a claim in the app is contradicted by the code."
+  }
+]
