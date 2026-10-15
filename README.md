@@ -21,6 +21,126 @@ Agrega esto a `.claude/settings.json` del proyecto (cambia USUARIO):
 }
 ```
 
+## Cómo usarlas
+
+### Llamar una skill
+Hay tres plugins, y el nombre de cada skill lleva el del plugin delante:
+
+| Plugin | Cómo se llama | Ejemplo |
+|---|---|---|
+| `mis-skills` | `/mis-skills:<skill>` | `/mis-skills:product-manager una app de reservas para spas` |
+| `founder` (Emotix) | `/founder:<skill>` | `/founder:pricing-strategy asistente de WhatsApp para spas` |
+| `linkedin-skills` | `/linkedin-skills:<skill>` | `/linkedin-skills:linkedin-post-writer sobre mi primer cliente` |
+
+No hace falta escribir el nombre: si pides algo en lenguaje normal («escríbeme un PRD», «audita este post de LinkedIn»), Claude elige la skill por su descripción. Llámala por nombre cuando varias podrían servir (hay varias de diseño, de video y dos sets de fundador) o cuando quieras una en concreto.
+
+Después de cambiar algo en este repo, abre una sesión nueva: los plugins se cargan al iniciar.
+
+### Dónde dejan su trabajo
+Varias skills guardan archivos para que la siguiente los lea. Conviene saber dónde:
+
+| Skills | Guardan en | Nota |
+|---|---|---|
+| `founder-*` (Jake) | `founder/` del proyecto (`competitors.md`, `pricing.md`, `cfo.md`, `numbers.json`, `panel/`…) | Cada una lee lo que dejaron las anteriores |
+| `/founder:*` (Emotix) | `founder/` del proyecto (`facts.md` + un archivo por skill: `pricing-strategy.md`…) | `facts.md` guarda los datos que tú diste; si dices algo nuevo, gana lo nuevo |
+| `linkedin-*` | `references/story-bank.md` y `references/voice-profile.md` **dentro de la carpeta del plugin** | Una actualización del plugin puede pisarlos: guarda una copia aparte y no los subas a este repo público |
+| `night-crew` | `NIGHT-CREW.md` en la raíz de tu repo | Las rutinas lo leen cada noche desde la rama principal |
+| `harvey` | `~/harvey` (base de datos, `.env`, `harvey.yaml`) | Fuera de tus proyectos |
+| `cinematic-site-prompt` | `<sitio>-cinematic-prompt.md` en la carpeta actual | |
+
+### Lo que necesitan
+- **Claves propias:** `linkedin-skills` (Publora para publicar o leer, Apify para analizar interacciones; ver `plugins/linkedin-skills/.env.example`), `gbro-collage-broll` (Gemini, y `ffmpeg`).
+- **Plan de Claude Pro o Max:** `night-crew` (rutinas en la nube) y `harvey` (usa tu suscripción en vez de una API).
+- **Python 3:** `shark`, `court`, `launch`, `founder-cfo`, `founder-consumer`, `founder-pricing`, `founder-plan`, `harvey`, `gbro-collage-broll`, `onetake`.
+- **Node:** las de video (`hyperframes`, `motion-director`, `onetake`, `claude-animation`, `lemo-opuscar`). `onetake` y `claude-animation` además usan Chrome y `ffmpeg` para renderizar.
+- `gbro-collage-broll` está pensada para Codex: su paso de imagen usa el generador de imágenes de Codex.
+
+### ¿Qué uso para…?
+
+| Quiero… | Usa |
+|---|---|
+| Saber si una idea vale la pena, rápido | `court` (juicio) o `shark` (inversores) |
+| Validar y planear un negocio completo | cadena `founder-*` o `/founder:*` (ver abajo) |
+| Ponerle precio a un servicio o armar una propuesta | `/founder:competitor-matrix` → `founder-pricing` o `/founder:pricing-strategy` → `founder-offer` |
+| Definir qué construir antes de programar | `product-manager` |
+| Diseñar o rediseñar una web | `design-inspiration` → `art-director` o `design-taste-frontend` (+ un estilo: `minimalist-ui`, `high-end-visual-design`, `industrial-brutalist-ui`); `redesign-existing-projects` si ya existe; `stitch-design-taste` si usas Google Stitch |
+| Un prompt largo para una web cinematográfica | `cinematic-site-prompt` |
+| Un prompt para un juguete 3D interactivo | `tactile-toy-prompt` |
+| Kit de marca o identidad | `founder-brand` (nombre, voz, promesa) → `brandkit` (las láminas visuales) |
+| Revisar código antes de publicar | `code-reviewer`, luego `launch` (GO / NO-GO) |
+| Que Claude trabaje de noche en mi repo | `night-crew` |
+| Conseguir clientes | `agency` (correos, llamadas, propuestas) o `harvey` (automático, con tu aprobación) |
+| Mejorar mi LinkedIn | `linkedin-roast` o `/linkedin-skills:linkedin-profile-optimizer` |
+| Escribir posts o guiones de reels | `content-principles` + `/linkedin-skills:linkedin-post-writer` |
+| Un video | ver «Video» abajo |
+| Que no recorte código ni deje «TODO» | `full-output-enforcement` |
+| Encontrar más skills | `find-skills` |
+
+## Cómo combinarlas
+
+Cada receta va de lo barato a lo caro: primero lo que descarta rápido, después lo que cuesta tiempo.
+
+### 1. De idea a negocio
+1. **Filtro rápido:** `/mis-skills:court <idea>` o `/mis-skills:shark <idea>`. Si no sobrevive, no gastes más.
+2. **Elige un set de fundador:**
+   - **`founder-*` (Jake)** para un negocio con números de calle: un local, un servicio, un producto físico. Simula un panel de compradores y saca unit economics. Orden: `founder-board` → `founder-competitors` → `founder-consumer` → `founder-pricing` → `founder-offer` → `founder-cfo` → `founder-marketing` → `founder-brand` → `founder-ops` → `founder-launch` → `founder-plan`.
+   - **`/founder:*` (Emotix)** para software o una startup: competidores con fuentes, MVP, landing y ronda. Orden sugerido: `validate-idea` → `product-brief` → `competitor-matrix` → `persona-gen` → `user-interviews` → `mvp-scope` → `pricing-strategy` → `go-to-market` → `landing-page` y `email-sequence` → `metrics-dashboard` → `pitch-deck` → `fundraise-prep`.
+3. **Mezclar los dos sets:** no se leen solos. Pásale el archivo del otro: «`/founder:pricing-strategy` usa `founder/competitors.md` y `founder/panel/results.md` como fuente». Lo que pones en el pedido gana sobre lo guardado.
+4. **Antes de lanzar:** `founder-launch` propone una prueba real barata (lista de espera, preventa). Hazla antes de construir de verdad.
+
+### 2. De idea a producto publicado
+1. `product-manager`: entrevista y PRD con criterios de aceptación.
+2. `design-inspiration` → `art-director` o `design-taste-frontend` para la dirección visual; agrega un estilo si quieres uno concreto.
+3. Mientras construyes: `full-output-enforcement` para archivos completos.
+4. `code-reviewer` para encontrar y arreglar fallos uno por uno.
+5. `launch`: 8 revisores dan GO o NO-GO. Un NO-GO se arregla antes de publicar.
+6. `night-crew`: después de publicar, la lista de pendientes avanza cada noche con pull requests que tú apruebas.
+
+### 3. Web nueva o rediseño (por ejemplo guillermorogel.com)
+1. `/mis-skills:cinematic-site-prompt https://tusitio.com`: lee el sitio actual y escribe el prompt completo, con solo contenido real.
+2. `design-inspiration` para elegir referencias antes de construir.
+3. Construye con el prompt + `art-director` o `design-taste-frontend`; `redesign-existing-projects` si conservas la base actual.
+4. `founder-brand` y `brandkit` si también cambia la identidad.
+5. `launch` antes de apuntar el dominio.
+6. Para una pieza 3D interactiva dentro del sitio: `tactile-toy-prompt`.
+
+### 4. Conseguir clientes (QuitoWeb)
+1. **La oferta primero:** `/founder:competitor-matrix` (precios con fuente) → `founder-pricing` o `/founder:pricing-strategy` → `founder-offer` (bonos y garantía).
+2. **La prueba social:** `content-principles` para el gancho y un video corto (receta 6) que muestre el resultado.
+3. **El contacto:** `agency` si quieres escribir y revisar tú cada correo y preparar llamadas; `harvey` si prefieres que busque negocios y redacte solo, con tu aprobación antes de cada envío. No uses los dos sobre la misma lista.
+4. **Mientras duermes:** el scout de `night-crew` busca dónde habla tu cliente y redacta una semana de posts.
+5. **Cerrar:** `/founder:landing-page` para la página de la oferta y `/founder:email-sequence` para el seguimiento.
+
+### 5. Marca personal en LinkedIn
+1. `linkedin-roast` (cinco críticos y luego la reescritura) o `/linkedin-skills:linkedin-profile-optimizer`.
+2. `/linkedin-skills:linkedin-interviewer`: te entrevista y llena el banco de historias que leen las demás.
+3. `/linkedin-skills:linkedin-content-planner`: plan de 7 días.
+4. `/linkedin-skills:linkedin-post-writer` + `content-principles` para cada post; `linkedin-repurposer` si partes de un video o blog.
+5. `/linkedin-skills:linkedin-humanizer --mode audit` antes de publicar.
+6. Después: `linkedin-comment-drafter` y `linkedin-reply-handler` para conversar, `linkedin-thread-monitor` para ver quién respondió, `linkedin-engager-analytics` para saber quién interactúa.
+
+### 6. Video
+Elige el motor según el resultado:
+
+| Quiero | Skill |
+|---|---|
+| Cualquier video desde HTML: promo, explicador, subtítulos, slideshow | `hyperframes` (entra siempre por aquí; ella llama a sus sub-skills) |
+| 10–20 s con banda sonora original | `motion-director` |
+| Demo de producto en un solo plano, sin cortes | `onetake` |
+| Insertos de B-roll de collage de papel (~5 s) | `gbro-collage-broll` |
+| Caricatura pintada a mano con Clawd | `claude-animation` |
+| Corto en uno de 43 estilos de cine | `lemo-opuscar` |
+
+Para combinarlas:
+1. `content-principles` para el guion y el gancho.
+2. El video principal con `onetake` o `hyperframes`.
+3. Insertos de `gbro-collage-broll` o `claude-animation` donde el guion se pone abstracto.
+4. Montaje y sonido en HyperFrames: `media-use` para música, voz y efectos; `hyperframes-audio` para la mezcla.
+
+### 7. Mantener este repo
+- `run-mis-skills` (solo dentro de este repo): valida, instala y prueba las skills. Úsala antes de subir una skill nueva.
+- `find-skills` para buscar más.
+
 ## Skills incluidas
 
 ### Propias
@@ -101,7 +221,7 @@ De [Jakeschincariol/founder-skill](https://github.com/Jakeschincariol/founder-sk
 | `founder-plan` | Compila todo en un plan de negocio con veredicto |
 
 ### Fundador (Emotix) - plugin aparte
-De [emotixco/claude-skills-founder](https://github.com/emotixco/claude-skills-founder). Va como su propio plugin, `founder@mis-skills` en `plugins/founder/`, porque todas sus skills leen `shared/conventions.md` en la raíz. Se llaman como `/founder:<skill>`. Guardan su salida en `founder/` del proyecto, igual que las `founder-*` de Jake, pero con nombres de archivo distintos, así que conviven y se pueden leer entre sí.
+De [emotixco/claude-skills-founder](https://github.com/emotixco/claude-skills-founder). Va como su propio plugin, `founder@mis-skills` en `plugins/founder/`, porque todas sus skills leen `shared/conventions.md` en la raíz. Se llaman como `/founder:<skill>`. Guardan su salida en `founder/` del proyecto, igual que las `founder-*` de Jake, pero con nombres de archivo distintos, así que conviven sin pisarse. Cada set lee solo sus propios archivos; para usar el trabajo del otro, nómbralo en el pedido (ver «Cómo combinarlas»).
 
 | Skill | Para qué |
 |---|---|
