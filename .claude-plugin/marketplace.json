@@ -13,6 +13,11 @@
       "name": "linkedin-skills",
       "source": "./plugins/linkedin-skills",
       "description": "12 skills de LinkedIn de Serge Bulaev (sergebulaev/linkedin-skills): posts, comentarios, respuestas, humanizer, perfil, plan de contenido y más. Publicar requiere una clave de Publora; el análisis, de Apify."
+    },
+    {
+      "name": "founder",
+      "source": "./plugins/founder",
+      "description": "13 skills de fundador de Emotix (emotixco/claude-skills-founder): validar idea, competidores, precios, MVP, go-to-market, pitch deck y ronda. Guardan todo en founder/ y se leen entre sí."
     }
   ]
 }
