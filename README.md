@@ -45,6 +45,7 @@ Varias skills guardan archivos para que la siguiente los lea. Conviene saber dó
 | `/founder:*` (Emotix) | `founder/` del proyecto (`facts.md` + un archivo por skill: `pricing-strategy.md`…) | `facts.md` guarda los datos que tú diste; si dices algo nuevo, gana lo nuevo |
 | `linkedin-*` | `references/story-bank.md` y `references/voice-profile.md` **dentro de la carpeta del plugin** | Una actualización del plugin puede pisarlos: guarda una copia aparte y no los subas a este repo público |
 | `night-crew` | `NIGHT-CREW.md` en la raíz de tu repo | Las rutinas lo leen cada noche desde la rama principal |
+| `graphicle` | `.graphicle/` en tu repo (el grafo), más `.mcp.json`, `.claude/settings.local.json` y Git hooks; la memoria en la carpeta de datos de Graphicle (en Linux, `~/.local/share/graphicle`) | `graphicle disconnect` quita todo menos `.graphicle/` |
 | `harvey` | `~/harvey` (base de datos, `.env`, `harvey.yaml`) | Fuera de tus proyectos |
 | `cinematic-site-prompt` | `<sitio>-cinematic-prompt.md` en la carpeta actual | |
 
@@ -60,6 +61,8 @@ Varias skills guardan archivos para que la siguiente los lea. Conviene saber dó
 | Quiero… | Usa |
 |---|---|
 | Saber si una idea vale la pena, rápido | `court` (juicio) o `shark` (inversores) |
+| Decidir entre opciones con mucho en juego | `llm-council` |
+| Entender un repo grande o qué rompe un cambio | `graphicle` |
 | Validar y planear un negocio completo | cadena `founder-*` o `/founder:*` (ver abajo) |
 | Ponerle precio a un servicio o armar una propuesta | `/founder:competitor-matrix` → `founder-pricing` o `/founder:pricing-strategy` → `founder-offer` |
 | Definir qué construir antes de programar | `product-manager` |
@@ -124,7 +127,7 @@ Elige el motor según el resultado:
 
 | Quiero | Skill |
 |---|---|
-| Cualquier video desde HTML: promo, explicador, subtítulos, slideshow | `hyperframes` (entra siempre por aquí; ella llama a sus sub-skills) |
+| Cualquier video desde HTML: promo, explicador, subtítulos, slideshow, video desde un PR, desde música o desde Figma | `hyperframes` (entra siempre por aquí; elige el flujo, como `product-launch-video` o `embedded-captions`) |
 | 10–20 s con banda sonora original | `motion-director` |
 | Demo de producto en un solo plano, sin cortes | `onetake` |
 | Insertos de B-roll de collage de papel (~5 s) | `gbro-collage-broll` |
@@ -179,7 +182,7 @@ Seleccionadas de [awesome-claude-video-skills](https://github.com/zhuyansen/awes
 
 | Skill | Para qué | Fuente |
 |---|---|---|
-| `hyperframes` (+ `hyperframes-core`, `-cli`, `-animation`, `-audio`, `-creative`, `-keyframes`, `-registry`, `-studio`, `media-use`) | HTML → MP4 determinista. Empieza siempre por `hyperframes`; instala los flujos de creación bajo demanda con `npx hyperframes skills update <flujo>` | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) |
+| `hyperframes` (+ `hyperframes-core`, `-cli`, `-animation`, `-audio`, `-creative`, `-keyframes`, `-registry`, `-studio`, `media-use`, y los flujos `general-video`, `faceless-explainer`, `product-launch-video`, `pr-to-video`, `slideshow`, `motion-graphics`, `music-to-video`, `talking-head-recut`, `embedded-captions`, `remotion-to-hyperframes`, `figma`) | HTML → MP4 determinista. Las 21 skills publicadas, como el paquete recomendado de HyperFrames. Empieza siempre por `hyperframes`: elige el flujo y carga las demás | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) |
 | `onetake` | Clips de producto de un solo plano, sin cortes | [feitangyuan/onetake](https://github.com/feitangyuan/onetake) |
 | `gbro-collage-broll` | B-roll de collage de papel con halftone | [pyang5166/gbro-collage-broll](https://github.com/pyang5166/gbro-collage-broll) |
 | `claude-animation` | Clawd en animación pintada a mano | [JohnHeibel/ClaudeAnimationBase](https://github.com/JohnHeibel/ClaudeAnimationBase) |
@@ -195,12 +198,14 @@ De [@alexyc9381](https://github.com/alexyc9381). Varias usan scripts de Python i
 | `court` | Juicio a una idea: fiscal, defensa, 12 jurados y un juez que lee el veredicto | [court-skill](https://github.com/alexyc9381/court-skill) |
 | `launch` | Revisión pre-lanzamiento estilo NASA: 8 controladores dan GO o NO-GO a tu app | [launch-skill](https://github.com/alexyc9381/launch-skill) |
 | `night-crew` | Tres rutinas nocturnas en la nube sobre tu repo de GitHub: un builder que hace la siguiente feature, un scout que busca clientes y redacta posts, y un tracker que revisa qué funciona. Solo abren pull requests; `/night-crew morning` da el resumen | [night-crew-skill](https://github.com/alexyc9381/night-crew-skill) |
+| `graphicle` | Instala y usa [Graphicle](https://github.com/graphicle-ai/graphicle) (Apache 2.0): grafo de tu código y memoria del proyecto para tu agente, con citas de archivo y línea, local y sin clave. La skill es un lanzador propio; el programa se instala aparte | propia |
 | `harvey` | Instala y maneja [Harvey](https://github.com/ethanplusai/harvey) (de Ethan Rogers, MIT), un agente de ventas autónomo que busca negocios, escribe correos en frío y los envía solo con tu aprobación, usando tu plan de Claude. La skill es un lanzador propio; la app se clona en `~/harvey` | propia |
 | `linkedin-roast` | Cinco perfiles critican tu LinkedIn y luego lo reescriben (titular, Acerca de, experiencia) | [linkedin-roast-skill](https://github.com/alexyc9381/linkedin-roast-skill) |
 
-### Contenido
+### Contenido y decisiones
 | Skill | Para qué | Fuente |
 |---|---|---|
+| `llm-council` | Pasa una decisión difícil por 5 asesores que opinan por separado, se revisan entre sí y un presidente da el veredicto (método LLM Council de Karpathy). Se activa con «council this» o «pressure-test this» | [aiwithremy/claude-skills-llm-council](https://github.com/aiwithremy/claude-skills-llm-council), de Ole Lehmann. **Sin licencia** |
 | `content-principles` | La psicología del contenido corto (reels, TikTok, Shorts, ganchos): cómo piensa quien mira, sin plantillas | [aiwithremy/content-principles](https://github.com/aiwithremy/content-principles), de Remy Gaskell. **Sin licencia** (ver abajo) |
 
 ### Fundadores (Jake Schincariol)
@@ -263,6 +268,6 @@ Cada skill importada conserva su `LICENSE` original en su carpeta.
 - MIT: find-skills, Taste Skill, gbro-collage-broll, claude-animation, lemo-opuscar, las skills de Alex Chen (`agency`, `shark`, `court`, `launch`, `linkedin-roast`, `night-crew`), las `founder-*`, `linkedin-skills` y el plugin `founder` de Emotix
 - Apache 2.0: HyperFrames y `media-use`
 - **PolyForm Noncommercial 1.0.0: `onetake`. Solo uso no comercial.**
-- **Sin licencia: `content-principles`.** El repo original no tiene archivo de licencia, así que los derechos son del autor. Se incluye sin cambios para uso personal, como sugiere su README; ver `SOURCE.md` en su carpeta. Si el autor lo pide, hay que quitarla.
+- **Sin licencia: `content-principles` y `llm-council`.** El repo original no tiene archivo de licencia, así que los derechos son del autor. Se incluye sin cambios para uso personal, como sugiere su README; ver `SOURCE.md` en cada carpeta. Si los autores lo piden, hay que quitarlas.
 
 Para ahorrar espacio se quitaron los GIF/MP4 de demostración de los README de `onetake` y `gbro-collage-broll` (las imágenes de esos README apuntan a archivos que no están aquí). Lo mismo con la imagen principal del README de `linkedin-skills`; de ese repo tampoco se copiaron la copia para Codex, sus tests, sus evals ni sus archivos de desarrollo (`CLAUDE.md`, `AGENTS.md`, `.github/`). Del plugin `founder` de Emotix no se copiaron `commands/` (avisos de la v1 obsoleta), `evals/`, `examples/` ni `.github/`; su README todavía enlaza a esas carpetas.
