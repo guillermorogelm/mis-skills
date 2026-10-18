@@ -1,9 +1,3 @@
 # Vendored tests that fail in this repo layout (see SKILL.md).
 hyperframesPackageSpec: resolvable in-repo version pins it
-skill CLIs run when invoked through a symlinked skills dir
 skill scripts detect their CLI entry through lib/main-module.mjs only
-each narrated workflow tells a host app's music and sounds the way in, and when a film is silent
-faceless-explainer assembles from its installed directory alone
-pr-to-video assembles from its installed directory alone
-product-launch-video assembles from its installed directory alone
-general-video packet builder starts from its installed directory alone
