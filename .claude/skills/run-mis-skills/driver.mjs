@@ -92,6 +92,13 @@ function checkSkills() {
   ok(`${count} skill folders scanned in ${PLUGINS.length} plugins`);
 }
 
+function checkSkillGraph() {
+  console.log('\n# skill-map graph');
+  const r = run('python3', ['-I', join(ROOT, 'tools/skill-graph/build.py'), '--check'], { cwd: ROOT });
+  if (r.status === 0) ok(r.stdout.trim());
+  else bad((r.stdout + r.stderr).trim());
+}
+
 function checkTests() {
   console.log('\n# bundled node tests');
   const files = [];
@@ -206,11 +213,11 @@ function invoke(skill, args) {
 
 const [cmd = 'check', ...rest] = process.argv.slice(2);
 switch (cmd) {
-  case 'check': checkManifests(); checkSkills(); checkTests(); break;
+  case 'check': checkManifests(); checkSkills(); checkSkillGraph(); checkTests(); break;
   case 'install': install(); break;
   case 'list': list(); break;
   case 'invoke': invoke(rest[0], rest.slice(1).join(' ')); break;
-  case 'all': checkManifests(); checkSkills(); checkTests(); install(); list(); break;
+  case 'all': checkManifests(); checkSkills(); checkSkillGraph(); checkTests(); install(); list(); break;
   default: console.error(`unknown command ${cmd}`); process.exit(2);
 }
 console.log(failed ? '\nFAILED' : '\nOK');

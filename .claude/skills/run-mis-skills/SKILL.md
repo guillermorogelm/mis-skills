@@ -29,7 +29,8 @@ node .claude/skills/run-mis-skills/driver.mjs check
 ```
 
 Offline, no model calls. Runs `claude plugin validate` on the marketplace,
-each plugin and (with `--strict`) each skills folder; checks every
+each plugin and (with `--strict`) each skills folder; checks that the
+`skill-map` graph is up to date (`tools/skill-graph/build.py --check`); checks every
 `SKILL.md` has frontmatter whose `name` equals its folder and a non-empty
 description; warns on descriptions over 1024 characters and skills missing
 from `README.md`; runs every bundled `*.test.mjs` and fails only on test
@@ -62,6 +63,7 @@ the final answer, and saves the answer to
 ### Before a PR that adds or edits a skill
 
 ```bash
+python3 -I tools/skill-graph/build.py      # refresh skill-map (put graphicle-graph on PATH first)
 node .claude/skills/run-mis-skills/driver.mjs all
 node .claude/skills/run-mis-skills/driver.mjs invoke <new-skill> "<a realistic request>"
 ```
