@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+__pycache__/
+*.pyc
+# Graphicle query cache written next to a graph
+plugins/mis-skills/skills/skill-map/cache/

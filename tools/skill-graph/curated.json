@@ -1,0 +1,146 @@
+{
+  "_comment": "Hand-written layer of the skill graph: recipes, alternatives, complements and notes. Everything else is extracted from the SKILL.md files by build.py. Skill ids are plugin:name.",
+  "recipes": [
+    {
+      "id": "idea-to-business-local",
+      "label": "Receta: de idea a negocio (local, servicio o producto físico)",
+      "steps": [
+        ["mis-skills:court", "mis-skills:shark", "mis-skills:llm-council"],
+        ["mis-skills:founder-board"],
+        ["mis-skills:founder-competitors"],
+        ["mis-skills:founder-consumer"],
+        ["mis-skills:founder-pricing"],
+        ["mis-skills:founder-offer"],
+        ["mis-skills:founder-cfo"],
+        ["mis-skills:founder-marketing"],
+        ["mis-skills:founder-brand"],
+        ["mis-skills:founder-ops"],
+        ["mis-skills:founder-launch"],
+        ["mis-skills:founder-plan"]
+      ],
+      "source": "Jakeschincariol/founder-skill README: board -> competitors -> consumer -> pricing -> offer -> cfo -> marketing -> brand -> ops -> launch -> plan"
+    },
+    {
+      "id": "idea-to-business-startup",
+      "label": "Receta: de idea a startup de software (con ronda)",
+      "steps": [
+        ["mis-skills:court", "mis-skills:shark", "mis-skills:llm-council"],
+        ["founder:validate-idea"],
+        ["founder:product-brief"],
+        ["founder:competitor-matrix"],
+        ["founder:persona-gen"],
+        ["founder:user-interviews"],
+        ["founder:mvp-scope"],
+        ["founder:pricing-strategy"],
+        ["founder:go-to-market"],
+        ["founder:landing-page", "founder:email-sequence"],
+        ["founder:metrics-dashboard"],
+        ["founder:pitch-deck"],
+        ["founder:fundraise-prep"]
+      ],
+      "source": "Order follows each skill's Reads line in plugins/founder"
+    },
+    {
+      "id": "idea-to-product",
+      "label": "Receta: de idea a producto publicado",
+      "steps": [
+        ["mis-skills:product-manager"],
+        ["mis-skills:design-inspiration"],
+        ["mis-skills:art-director", "mis-skills:design-taste-frontend"],
+        ["mis-skills:full-output-enforcement"],
+        ["mis-skills:code-reviewer"],
+        ["mis-skills:launch"],
+        ["mis-skills:night-crew"]
+      ]
+    },
+    {
+      "id": "website",
+      "label": "Receta: web nueva o rediseño",
+      "steps": [
+        ["mis-skills:cinematic-site-prompt"],
+        ["mis-skills:design-inspiration"],
+        ["mis-skills:art-director", "mis-skills:design-taste-frontend", "mis-skills:redesign-existing-projects"],
+        ["mis-skills:founder-brand"],
+        ["mis-skills:brandkit"],
+        ["mis-skills:launch"]
+      ]
+    },
+    {
+      "id": "get-clients",
+      "label": "Receta: conseguir clientes (QuitoWeb)",
+      "steps": [
+        ["founder:competitor-matrix"],
+        ["mis-skills:founder-pricing", "founder:pricing-strategy"],
+        ["mis-skills:founder-offer"],
+        ["mis-skills:content-principles"],
+        ["mis-skills:agency", "mis-skills:harvey"],
+        ["mis-skills:night-crew"],
+        ["founder:landing-page"],
+        ["founder:email-sequence"]
+      ]
+    },
+    {
+      "id": "linkedin",
+      "label": "Receta: marca personal en LinkedIn",
+      "steps": [
+        ["mis-skills:linkedin-roast", "linkedin-skills:linkedin-profile-optimizer"],
+        ["linkedin-skills:linkedin-interviewer"],
+        ["linkedin-skills:linkedin-content-planner"],
+        ["linkedin-skills:linkedin-post-writer", "linkedin-skills:linkedin-repurposer"],
+        ["linkedin-skills:linkedin-humanizer"],
+        ["linkedin-skills:linkedin-comment-drafter", "linkedin-skills:linkedin-reply-handler"],
+        ["linkedin-skills:linkedin-thread-monitor"],
+        ["linkedin-skills:linkedin-engager-analytics"]
+      ]
+    },
+    {
+      "id": "video",
+      "label": "Receta: video corto",
+      "steps": [
+        ["mis-skills:content-principles"],
+        ["mis-skills:onetake", "mis-skills:hyperframes"],
+        ["mis-skills:gbro-collage-broll", "mis-skills:claude-animation"],
+        ["mis-skills:media-use"],
+        ["mis-skills:hyperframes-audio"]
+      ]
+    },
+    {
+      "id": "understand-code",
+      "label": "Receta: entender y arreglar un repo",
+      "steps": [
+        ["mis-skills:graphicle"],
+        ["mis-skills:code-reviewer"],
+        ["mis-skills:launch"]
+      ]
+    }
+  ],
+  "alternatives": [
+    {"skills": ["mis-skills:court", "mis-skills:shark", "mis-skills:llm-council"], "note": "Probar una idea o decisión: juicio, inversores o consejo de 5 asesores"},
+    {"skills": ["mis-skills:art-director", "mis-skills:design-taste-frontend"], "note": "Dirección visual de una web"},
+    {"skills": ["mis-skills:minimalist-ui", "mis-skills:high-end-visual-design", "mis-skills:industrial-brutalist-ui"], "note": "Estilos visuales concretos"},
+    {"skills": ["mis-skills:agency", "mis-skills:harvey"], "note": "Prospección: agency la revisas tú correo a correo; harvey busca y envía solo con tu aprobación. No uses las dos sobre la misma lista"},
+    {"skills": ["mis-skills:founder-pricing", "founder:pricing-strategy"], "note": "Precio: Van Westendorp sobre el panel simulado, o niveles con competidores con fuente"},
+    {"skills": ["mis-skills:founder-competitors", "founder:competitor-matrix"], "note": "Mapa de competidores"},
+    {"skills": ["mis-skills:founder-board", "founder:validate-idea"], "note": "Validar la idea"},
+    {"skills": ["mis-skills:founder-marketing", "founder:go-to-market"], "note": "Plan de marketing y lanzamiento"},
+    {"skills": ["mis-skills:linkedin-roast", "linkedin-skills:linkedin-profile-optimizer"], "note": "Arreglar el perfil de LinkedIn"},
+    {"skills": ["mis-skills:hyperframes", "mis-skills:motion-director", "mis-skills:onetake", "mis-skills:lemo-opuscar", "mis-skills:claude-animation"], "note": "Motores de video: HTML a MP4 general, 10-20 s con banda sonora, demo en un plano, 43 estilos de cine, caricatura de Clawd"}
+  ],
+  "complements": [
+    {"from": "mis-skills:content-principles", "to": ["linkedin-skills:linkedin-post-writer", "mis-skills:onetake", "mis-skills:hyperframes", "mis-skills:gbro-collage-broll", "mis-skills:founder-marketing", "mis-skills:motion-director"], "note": "Guion y gancho para contenido corto"},
+    {"from": "mis-skills:founder-brand", "to": ["mis-skills:brandkit"], "note": "Nombre, voz y brief; brandkit hace las láminas visuales"},
+    {"from": "mis-skills:minimalist-ui", "to": ["mis-skills:design-taste-frontend", "mis-skills:art-director"], "note": "Estilo aplicado sobre la dirección visual"},
+    {"from": "mis-skills:high-end-visual-design", "to": ["mis-skills:design-taste-frontend", "mis-skills:art-director"], "note": "Estilo aplicado sobre la dirección visual"},
+    {"from": "mis-skills:industrial-brutalist-ui", "to": ["mis-skills:design-taste-frontend", "mis-skills:art-director"], "note": "Estilo aplicado sobre la dirección visual"},
+    {"from": "mis-skills:stitch-design-taste", "to": ["mis-skills:design-taste-frontend"], "note": "Las mismas reglas exportadas como DESIGN.md para Google Stitch"},
+    {"from": "mis-skills:full-output-enforcement", "to": ["mis-skills:art-director", "mis-skills:design-taste-frontend", "mis-skills:redesign-existing-projects", "mis-skills:product-manager"], "note": "Archivos completos mientras se construye"},
+    {"from": "mis-skills:design-inspiration", "to": ["mis-skills:cinematic-site-prompt", "mis-skills:tactile-toy-prompt"], "note": "Referencias reales antes de escribir el prompt"},
+    {"from": "mis-skills:llm-council", "to": ["mis-skills:founder-pricing", "founder:pricing-strategy", "mis-skills:founder-offer"], "note": "Someter una decisión de precio u oferta al consejo"},
+    {"from": "mis-skills:graphicle", "to": ["mis-skills:code-reviewer", "mis-skills:night-crew"], "note": "Contexto citado del repo para revisar o construir"},
+    {"from": "mis-skills:find-skills", "to": ["mis-skills:skill-map"], "note": "Buscar skills nuevas fuera de este repo"}
+  ],
+  "standalone": {
+    "mis-skills:tactile-toy-prompt": "Prompt para un juguete 3D interactivo en un solo HTML",
+    "mis-skills:find-skills": "Buscar e instalar más skills"
+  }
+}

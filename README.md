@@ -56,6 +56,19 @@ Varias skills guardan archivos para que la siguiente los lea. Conviene saber dó
 - **Node:** las de video (`hyperframes`, `motion-director`, `onetake`, `claude-animation`, `lemo-opuscar`). `onetake` y `claude-animation` además usan Chrome y `ffmpeg` para renderizar.
 - `gbro-collage-broll` está pensada para Codex: su paso de imagen usa el generador de imágenes de Codex.
 
+### El mapa de skills
+La skill `skill-map` lleva dentro el grafo de cómo se conectan todas: qué archivos lee y escribe cada una, cuál va después, cuáles son alternativas, qué necesitan y las recetas. Está hecho con [Graphicle](https://github.com/graphicle-ai/graphicle) y viaja con el plugin, así que cualquier sesión que lo instale lo tiene. Pregunta «¿qué skills combino para…?» o llámala con `/mis-skills:skill-map`.
+
+| Archivo | Qué es |
+|---|---|
+| [`map.md`](plugins/mis-skills/skills/skill-map/map.md) | El grafo en texto: recetas con diagramas, archivos compartidos, requisitos y las conexiones de cada skill |
+| `graph.json` | El grafo de skills en formato Graphicle (`graphicle-graph query/explain/path --graph …`) |
+| `graph.html` | Vista interactiva para abrir en el navegador |
+| `GRAPH_REPORT.md` | Informe de Graphicle: comunidades y skills centrales |
+| `code-graph.json` | Grafo de código de todos los scripts de las skills (funciones, llamadas, imports) |
+
+Se regenera con `python3 -I tools/skill-graph/build.py` (con `graphicle-graph` en el PATH). Las recetas, alternativas y complementos se editan a mano en `tools/skill-graph/curated.json`; lo demás sale de los `SKILL.md`. El `check` de `run-mis-skills` falla si el grafo quedó desactualizado.
+
 ### ¿Qué uso para…?
 
 | Quiero… | Usa |
@@ -77,6 +90,7 @@ Varias skills guardan archivos para que la siguiente los lea. Conviene saber dó
 | Escribir posts o guiones de reels | `content-principles` + `/linkedin-skills:linkedin-post-writer` |
 | Un video | ver «Video» abajo |
 | Que no recorte código ni deje «TODO» | `full-output-enforcement` |
+| Saber qué skills combinar y en qué orden | `skill-map` |
 | Encontrar más skills | `find-skills` |
 
 ## Cómo combinarlas
@@ -142,6 +156,7 @@ Para combinarlas:
 
 ### 7. Mantener este repo
 - `run-mis-skills` (solo dentro de este repo): valida, instala y prueba las skills. Úsala antes de subir una skill nueva.
+- Después de añadir o cambiar una skill: `python3 -I tools/skill-graph/build.py` para actualizar el mapa; si la skill nueva encaja en una receta, añádela en `tools/skill-graph/curated.json`.
 - `find-skills` para buscar más.
 
 ## Skills incluidas
@@ -156,6 +171,7 @@ Para combinarlas:
 | `claude-animation` | Caricaturas pintadas a mano con Clawd (p5.brush). Envuelve el kit de ClaudeAnimationBase |
 | `design-inspiration` | Elige referencias reales de las galerías de mkdir.directory antes de diseñar |
 | `tactile-toy-prompt` | Convierte una idea de una línea en un prompt para un juguete 3D blando en un solo HTML con three.js (estilo "Squishy Toast" / "Gummy Bears") |
+| `skill-map` | El mapa de cómo se conectan todas las skills (grafo de Graphicle + texto). Úsala para elegir y encadenar skills |
 | `cinematic-site-prompt` | Prompt largo y detallado (2.000–3.500 palabras) para un sitio web cinematográfico guiado por scroll: escenas, motion, rendimiento, accesibilidad, SEO y checklist. Usa solo contenido real del sitio actual |
 
 ### Descubrir más skills
